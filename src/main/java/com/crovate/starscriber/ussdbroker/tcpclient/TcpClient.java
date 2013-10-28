@@ -61,9 +61,7 @@ public class TcpClient {
                  if(heartBeat.isHeartbeatResponse(response.getResponse())){
                               //System.out.println("Heartbeat request: "+response.getResponse());
                          request = heartBeat.getHeartbeatRequest();
-                         if(request.getType().equals(RequestType.CLOSE)){
-                           isClosed = true;
-                        }
+
                          request.writeDelimitedTo(output);
                   }else{
                      
@@ -71,7 +69,7 @@ public class TcpClient {
                      request = handler.getRequest(response);
                      if(request.getType().equals(RequestType.CLOSE)){
                         isClosed = true;
-                    }
+                      }
                      request.writeDelimitedTo(output);
                      System.out.println("-----Request Send: " + request.getMessage() + "------\n");
                     
