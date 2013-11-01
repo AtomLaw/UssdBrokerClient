@@ -7,7 +7,7 @@ import java.util.UUID;
 public class TcpClientHandler{
 	
 
-    private static boolean isStart = true;
+    private static boolean start = true;
     
     private int lastCompId;
     
@@ -17,6 +17,16 @@ public class TcpClientHandler{
   
     private String phoneNumber;
 
+    public static boolean isStart() {
+        return start;
+    }
+
+    public static void setStart(boolean start) {
+        TcpClientHandler.start = start;
+    }
+
+    
+    
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -37,9 +47,9 @@ public class TcpClientHandler{
         try{
                 String resp = null;
                 
-                if(isStart){
+                if(start){
 
-                    isStart = false;
+                    start = false;
                     resp = "Enviando CallMe o Seleccione:\n\n" +
                            "1. Presta Facil\n"+
                            "2. DaMe (GiftMe)\n"+
@@ -103,7 +113,7 @@ public class TcpClientHandler{
                     return request;
 		}
                 
-                if(response.getResponse().startsWith("2") && !firstResp){
+                if(response.getResponse().startsWith("2") && !firstResp && !optionTwoSelected){
 				resp = "Si otro dia necesitas prestamo, " + 
 						"cuenta con Claro";
 				 request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,

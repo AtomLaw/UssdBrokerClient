@@ -31,30 +31,19 @@ public class TcpClient {
                InputStream input = clientSocket.getInputStream();
                Request request = null;
                HeartBeat heartBeat = new HeartBeat();
-               System.out.println("Sending data to server");
-              
-//               request = RequestHandler.buildRequest(1,"Its cp","Its op",23L,
-//                                                     "\"1\",\"Please select an option:\\n\" +\n" +
-//                                                           "\"1- Send Email now\\n\" +\n" +
-//                                                            "\"2- Win $1000 now!\\n\" +\n" +
-//                                                            "\"3- Win any amount!\\n\" +\n" +
-//                                                             "\"4- Check Bank Balance\"",true, Request.RequestType.BEGIN);
-               //Request request2 = requestSender.buildRequest(2,"Its cp2","Its op2",25L,"Its message 2",false);
-            
-               
                    
                Response response = null;
                
                TcpClientHandler handler = new TcpClientHandler(phoneNumber);
-                
-               request = handler.getRequest(response);
-               request.writeDelimitedTo(output);
-                 
-               System.out.println("Request Type:"+ request.getType() +"\nRequest Send:\n" + request.getMessage());
-                    
-                    
-               while(!isClosed){
                    
+               while(!isClosed){
+                 
+                 if(TcpClientHandler.isStart()){
+                    request = handler.getRequest(response);
+                    request.writeDelimitedTo(output);
+                 
+                    System.out.println("Request Type:"+ request.getType() +"\nRequest Send:\n" + request.getMessage());
+                 }
                  
                  response = RequestResponse.Response.parseDelimitedFrom(input);
                           
@@ -68,7 +57,8 @@ public class TcpClient {
                      System.out.println("-----Response recieved: "+response.getResponse() + "------\n");
                      request = handler.getRequest(response);
                      if(request.getType().equals(RequestType.CLOSE)){
-                        isClosed = true;
+                        isClosed = true;  /* uncomment this line if each socket is closed after sending menu once. Otherwise socket will restart sending menu after the last menu.
+                        //  TcpClientHandler.setStart(true);   /* Comment this line when uncomment above line.*/
                       }
                      request.writeDelimitedTo(output);
                      System.out.println("-----Request Send: " + request.getMessage() + "------\n");
@@ -118,21 +108,19 @@ public class TcpClient {
    public static void main(String args[]) throws Exception
     
   {
-       String phoneNumber = "";
+      String phoneNumber = "";
      
-      // phoneNumber = Arrays.toString(args);
-	
-      // Use this number 56979409249
+      if(args.length != 0){
+           phoneNumber = args[0];
+      }else{
+           phoneNumber = "56979409249";
+      }
 		
-      phoneNumber = "56979409249";
-      
       System.out.println("Will send message to number:" + phoneNumber);  
       
       TcpClient  client = new TcpClient();
-      
-      
         
-      client.startClient(phoneNumber.substring(1, phoneNumber.length()-1));
+      client.startClient(phoneNumber);
     
   }
 
