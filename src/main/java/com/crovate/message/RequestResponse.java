@@ -1309,6 +1309,16 @@ public final class RequestResponse {
      * <code>required bool error = 3;</code>
      */
     boolean getError();
+
+    // required bool timeout = 4;
+    /**
+     * <code>required bool timeout = 4;</code>
+     */
+    boolean hasTimeout();
+    /**
+     * <code>required bool timeout = 4;</code>
+     */
+    boolean getTimeout();
   }
   /**
    * Protobuf type {@code crovate.Response}
@@ -1374,6 +1384,11 @@ public final class RequestResponse {
             case 24: {
               bitField0_ |= 0x00000004;
               error_ = input.readBool();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              timeout_ = input.readBool();
               break;
             }
           }
@@ -1518,10 +1533,27 @@ public final class RequestResponse {
       return error_;
     }
 
+    // required bool timeout = 4;
+    public static final int TIMEOUT_FIELD_NUMBER = 4;
+    private boolean timeout_;
+    /**
+     * <code>required bool timeout = 4;</code>
+     */
+    public boolean hasTimeout() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>required bool timeout = 4;</code>
+     */
+    public boolean getTimeout() {
+      return timeout_;
+    }
+
     private void initFields() {
       id_ = "";
       response_ = "";
       error_ = false;
+      timeout_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1540,6 +1572,10 @@ public final class RequestResponse {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (!hasTimeout()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1555,6 +1591,9 @@ public final class RequestResponse {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBool(3, error_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBool(4, timeout_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1576,6 +1615,10 @@ public final class RequestResponse {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(3, error_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(4, timeout_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1699,6 +1742,8 @@ public final class RequestResponse {
         bitField0_ = (bitField0_ & ~0x00000002);
         error_ = false;
         bitField0_ = (bitField0_ & ~0x00000004);
+        timeout_ = false;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1739,6 +1784,10 @@ public final class RequestResponse {
           to_bitField0_ |= 0x00000004;
         }
         result.error_ = error_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.timeout_ = timeout_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1768,6 +1817,9 @@ public final class RequestResponse {
         if (other.hasError()) {
           setError(other.getError());
         }
+        if (other.hasTimeout()) {
+          setTimeout(other.getTimeout());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -1782,6 +1834,10 @@ public final class RequestResponse {
           return false;
         }
         if (!hasError()) {
+          
+          return false;
+        }
+        if (!hasTimeout()) {
           
           return false;
         }
@@ -1988,6 +2044,39 @@ public final class RequestResponse {
         return this;
       }
 
+      // required bool timeout = 4;
+      private boolean timeout_ ;
+      /**
+       * <code>required bool timeout = 4;</code>
+       */
+      public boolean hasTimeout() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>required bool timeout = 4;</code>
+       */
+      public boolean getTimeout() {
+        return timeout_;
+      }
+      /**
+       * <code>required bool timeout = 4;</code>
+       */
+      public Builder setTimeout(boolean value) {
+        bitField0_ |= 0x00000008;
+        timeout_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bool timeout = 4;</code>
+       */
+      public Builder clearTimeout() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        timeout_ = false;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:crovate.Response)
     }
 
@@ -2024,9 +2113,10 @@ public final class RequestResponse {
       "ge\030\005 \002(\t\022*\n\004type\030\007 \002(\0162\034.crovate.Request" +
       ".RequestType\"J\n\013RequestType\022\t\n\005BEGIN\020\000\022\014" +
       "\n\010CONTINUE\020\001\022\007\n\003END\020\002\022\t\n\005CLOSE\020\003\022\016\n\nHEAR" +
-      "T_BEAT\020\004\"7\n\010Response\022\n\n\002id\030\001 \002(\t\022\020\n\010resp" +
-      "onse\030\002 \002(\t\022\r\n\005error\030\003 \002(\010B&\n\023com.crovate" +
-      ".messageB\017RequestResponse"
+      "T_BEAT\020\004\"H\n\010Response\022\n\n\002id\030\001 \002(\t\022\020\n\010resp" +
+      "onse\030\002 \002(\t\022\r\n\005error\030\003 \002(\010\022\017\n\007timeout\030\004 \002" +
+      "(\010B&\n\023com.crovate.messageB\017RequestRespon" +
+      "se"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2044,7 +2134,7 @@ public final class RequestResponse {
           internal_static_crovate_Response_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_crovate_Response_descriptor,
-              new java.lang.String[] { "Id", "Response", "Error", });
+              new java.lang.String[] { "Id", "Response", "Error", "Timeout", });
           return null;
         }
       };

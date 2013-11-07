@@ -36,4 +36,6 @@ message Response {
    required string response = 2;
 
    required bool error = 3;
+   
+   required bool timeout = 4;
 }

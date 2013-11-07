@@ -52,6 +52,8 @@ public class TcpClient {
                          request = heartBeat.getHeartbeatRequest();
 
                          request.writeDelimitedTo(output);
+                  }else if(response.getTimeout()){
+                      isClosed = true;
                   }else{
                      
                      System.out.println("-----Response recieved: "+response.getResponse() + "------\n");
