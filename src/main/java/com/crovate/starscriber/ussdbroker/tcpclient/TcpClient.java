@@ -54,6 +54,7 @@ public class TcpClient {
                          request.writeDelimitedTo(output);
                   }else if(response.getTimeout()){
                       isClosed = true;
+                      System.out.println("Request is timeout");
                   }else{
                      
                      System.out.println("-----Response recieved: "+response.getResponse() + "------\n");
