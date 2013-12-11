@@ -4,8 +4,8 @@
  */
 package com.crovate.starscriber.ussdbroker.tcpclient;
 
-import com.crovate.message.RequestResponse;
-import com.crovate.message.RequestResponse.Request.RequestType;
+import com.crovate.message.ProtoBuffRequest.Request;
+import com.crovate.message.ProtoBuffRequest.Request.RequestType;
 
 /**
  *
@@ -13,9 +13,9 @@ import com.crovate.message.RequestResponse.Request.RequestType;
  */
 public class RequestHandler {
     
-    public static RequestResponse.Request buildRequest(String id,String cp,String op,Integer timeout,String message,RequestType type){
+    public static Request buildRequest(String id,String cp,String op,Integer timeout,String message,RequestType type){
        
-       RequestResponse.Request.Builder request =  RequestResponse.Request.newBuilder();
+       Request.Builder request =  Request.newBuilder();
        
        request.setId(id);
        request.setCp(cp);

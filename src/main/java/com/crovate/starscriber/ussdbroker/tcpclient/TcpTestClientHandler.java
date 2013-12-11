@@ -1,12 +1,21 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.crovate.starscriber.ussdbroker.tcpclient;
 
-import com.crovate.message.ProtoBuffRequest.Request;
-import com.crovate.message.ProtoBuffResponse.Response;
+import com.crovate.message.ProtoBuffRequest;
+import com.crovate.message.ProtoBuffResponse;
 import java.util.UUID;
 
-public class TcpClientHandler{
-	
-
+/**
+ *
+ * @author jawad
+ */
+public class TcpTestClientHandler {
+    
+    
+    
     private static boolean start = true;
     
     private int lastCompId;
@@ -22,7 +31,7 @@ public class TcpClientHandler{
     }
 
     public static void setStart(boolean start) {
-        TcpClientHandler.start = start;
+        TcpTestClientHandler.start = start;
     }
 
     
@@ -35,14 +44,14 @@ public class TcpClientHandler{
         this.phoneNumber = phoneNumber;
     }
 
-    public TcpClientHandler(String phoneNumber) {
+    public TcpTestClientHandler(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
     
     
-    public Request getRequest(Response response) {
+    public ProtoBuffRequest.Request getRequest(ProtoBuffResponse.Response response) {
         
-        Request request = null;   
+        ProtoBuffRequest.Request request = null;   
         
         try{
                 String resp = null;
@@ -60,7 +69,7 @@ public class TcpClientHandler{
                     System.out.println("Client Session Id: " + uniqueId);
                     
                     request = RequestHandler.buildRequest(uniqueId,phoneNumber,"Its op",5000,
-                                                         resp , Request.RequestType.BEGIN);
+                                                         resp , ProtoBuffRequest.Request.RequestType.BEGIN);
 
                 }else{
            			
@@ -75,9 +84,9 @@ public class TcpClientHandler{
 	}
 	
 	
-	private Request processContinue(Response response){		
+	private ProtoBuffRequest.Request processContinue(ProtoBuffResponse.Response response){		
 		
-          Request request = null;
+          ProtoBuffRequest.Request request = null;
           
           String uniqueId = response.getId();
            
@@ -96,7 +105,7 @@ public class TcpClientHandler{
 				
 				firstResp = false;
 				 request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                     resp , Request.RequestType.CONTINUE);
+                                                     resp , ProtoBuffRequest.Request.RequestType.CONTINUE);
 				return request;
 		}
 			
@@ -108,7 +117,7 @@ public class TcpClientHandler{
                             "Saludos de Claro.";
                 
                     request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                     resp , Request.RequestType.END);
+                                                     resp , ProtoBuffRequest.Request.RequestType.END);
 			
                     return request;
 		}
@@ -117,7 +126,7 @@ public class TcpClientHandler{
 				resp = "Si otro dia necesitas prestamo, " + 
 						"cuenta con Claro";
 				 request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                     resp , Request.RequestType.END);
+                                                     resp , ProtoBuffRequest.Request.RequestType.END);
 		
 			
                                 return request;
@@ -136,7 +145,7 @@ public class TcpClientHandler{
                     optionTwoSelected = true;
                     
                     request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                     resp , Request.RequestType.CONTINUE);
+                                                     resp , ProtoBuffRequest.Request.RequestType.CONTINUE);
                     return request;
                 }
 			
@@ -146,7 +155,7 @@ public class TcpClientHandler{
                         	"Se envio una solicitud de DaMe por $1.500 a 92011933.";
 				
                     request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                     resp , Request.RequestType.END);
+                                                     resp , ProtoBuffRequest.Request.RequestType.END);
 		
                     return request;
 		}
@@ -157,7 +166,7 @@ public class TcpClientHandler{
                             "Se envio una solicitud de DaMe por $2000 a 92011933.";
 			
                     request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                     resp , Request.RequestType.END);
+                                                     resp , ProtoBuffRequest.Request.RequestType.END);
 		                    
                     return request;
 		}
@@ -172,7 +181,7 @@ public class TcpClientHandler{
                         
                     
                     request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                     resp , Request.RequestType.END);
+                                                     resp , ProtoBuffRequest.Request.RequestType.END);
 		    
                     return request;
 		}
@@ -185,7 +194,7 @@ public class TcpClientHandler{
 			"Se envio una solicitud de DaMe por $3.000 a 92011933.";
 		
                     request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                   resp , Request.RequestType.END);
+                                                   resp , ProtoBuffRequest.Request.RequestType.END);
 		    
                     
                     return request;
@@ -198,13 +207,13 @@ public class TcpClientHandler{
                             "Su saldo es $3.435.";
 				
                     request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                   resp , Request.RequestType.END);
+                                                   resp , ProtoBuffRequest.Request.RequestType.CONTINUE);
 		
                     return request;
 		}
                     
                 request = RequestHandler.buildRequest(uniqueId,"Its cp","Its op",5000,
-                                                   resp , Request.RequestType.CLOSE);
+                                                   resp , ProtoBuffRequest.Request.RequestType.CLOSE);
 		    
                 return request; 
 			
@@ -224,5 +233,5 @@ public class TcpClientHandler{
             return uniqueID;
             
         }
-
+    
 }

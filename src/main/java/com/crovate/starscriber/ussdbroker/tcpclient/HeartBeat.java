@@ -1,7 +1,7 @@
 package com.crovate.starscriber.ussdbroker.tcpclient;
 
-import com.crovate.message.RequestResponse;
-import com.crovate.message.RequestResponse.Request.RequestType;
+import com.crovate.message.ProtoBuffRequest.Request;
+import com.crovate.message.ProtoBuffRequest.Request.RequestType;
 
 
 
@@ -17,7 +17,7 @@ public class HeartBeat
      * is synonymous to [CHECK]. However, we cannot send [CHECK] as bytes since
      * the TCP stream is handled by Google Protocol Buffer and it expects 
      * everything to be in that format. */
-    private static RequestResponse.Request heartbeatEvents_REQUEST = null;
+    private static Request heartbeatEvents_REQUEST = null;
     
     /** The Heartbeat acknowledgement from the client */
     private final static String RESPONSE = "[LINE-OK]\r\n";
@@ -52,7 +52,7 @@ public class HeartBeat
      * 
      * @return Mobilerequest format heartbeat event.
      */
-    public RequestResponse.Request getHeartbeatRequest() 
+    public Request getHeartbeatRequest() 
     {   
         return heartbeatEvents_REQUEST;
     } 

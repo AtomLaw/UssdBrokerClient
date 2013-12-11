@@ -1,22 +1,26 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.crovate.starscriber.ussdbroker.tcpclient;
 
-import com.crovate.message.ProtoBuffRequest.Request;
-import com.crovate.message.ProtoBuffRequest.Request.RequestType;
-import com.crovate.message.ProtoBuffResponse.Response;
+import com.crovate.message.ProtoBuffRequest;
+import com.crovate.message.ProtoBuffResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  *
  * @author jawad
  */
-public class TcpClient {
-     
-    private final static Logger logger = Logger.getLogger(TcpClient.class.getName());
+public class TcpTestClient {
+      
+    private final static Logger logger = LoggerFactory.getLogger(TcpTestClient.class.getName());
     
     private static int PORT = 6789;
     private static String HOST_NAME = "localhost";
@@ -25,26 +29,29 @@ public class TcpClient {
     public void startClient(String phoneNumber) {
         
          try {
+               int packetCount = 0;
                Socket clientSocket = openConnection(HOST_NAME, PORT);
                OutputStream output = clientSocket.getOutputStream();
                InputStream input = clientSocket.getInputStream();
-               Request request = null;
+               ProtoBuffRequest.Request request = null;
                HeartBeat heartBeat = new HeartBeat();
                    
-               Response response = null;
+               ProtoBuffResponse.Response response = null;
                
-               TcpClientHandler handler = new TcpClientHandler(phoneNumber);
+               TcpTestClientHandler handler = new TcpTestClientHandler(phoneNumber);
                    
-               while(!isClosed){
+               for(int i=0; i< 100; i++){
                  
-                 if(TcpClientHandler.isStart()){
+               //  if(TcpClientHandler.isStart()){
                     request = handler.getRequest(response);
                     request.writeDelimitedTo(output);
+                    packetCount++; 
+                    logger.info("Sending packet count {}",packetCount);
                  
                     System.out.println("Request Type:"+ request.getType() +"\nRequest Send:\n" + request.getMessage());
-                 }
+               //  }
                  
-                 response = Response.parseDelimitedFrom(input);
+                 response = ProtoBuffResponse.Response.parseDelimitedFrom(input);
                           
                  if(heartBeat.isHeartbeatResponse(response.getResponse())){
                               //System.out.println("Heartbeat request: "+response.getResponse());
@@ -61,7 +68,7 @@ public class TcpClient {
                      
                      System.out.println("-----Response recieved: "+response.getResponse() + "------\n");
                      request = handler.getRequest(response);
-                     if(request.getType().equals(RequestType.CLOSE)){
+                     if(request.getType().equals(ProtoBuffRequest.Request.RequestType.CLOSE)){
                         isClosed = true;  /* uncomment this line if each socket is closed after sending menu once. Otherwise socket will restart sending menu after the last menu.
                         //  TcpClientHandler.setStart(true);   /* Comment this line when uncomment above line.*/
                       }
@@ -77,11 +84,11 @@ public class TcpClient {
                 closeConnection(clientSocket);
 
            } catch (IOException ex) {
-               logger.log(Level.SEVERE, null, ex);
+               logger.error(null, ex);
               
            
            }catch (Exception e) {
-                logger.log(Level.SEVERE, "Exception occured ", e);
+                logger.error("Exception occured ", e);
                 System.exit(1);
          }
     }
@@ -94,18 +101,18 @@ public class TcpClient {
             clientSocket = new Socket(HOST_NAME, PORT);
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Exception occured while connecting to server", e);
+            logger.error("Exception occured while connecting to server", e);
         }
         return clientSocket;
     }
     
     public void closeConnection(Socket clientSocket){
         try {
-            logger.log(Level.INFO, "Closing the connection");
+            logger.info("Closing the connection");
             clientSocket.close();
            
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Exception occured while closing the connection", e);
+            logger.error("Exception occured while closing the connection", e);
         }
     }
     
@@ -123,13 +130,10 @@ public class TcpClient {
 		
       System.out.println("Will send message to number:" + phoneNumber);  
       
-      TcpClient  client = new TcpClient();
+      TcpTestClient  client = new TcpTestClient();
         
       client.startClient(phoneNumber);
     
   }
 
-  
 }
-
-  

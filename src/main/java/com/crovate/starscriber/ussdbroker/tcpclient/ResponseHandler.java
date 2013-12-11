@@ -4,7 +4,7 @@
  */
 package com.crovate.starscriber.ussdbroker.tcpclient;
 
-import com.crovate.message.RequestResponse;
+import com.crovate.message.ProtoBuffResponse.Response;
 
 /**
  *
@@ -12,14 +12,14 @@ import com.crovate.message.RequestResponse;
  */
 public class ResponseHandler {
     
-    public static RequestResponse.Response buildResponse(String id,String responseString ,boolean error){
+    public static Response buildResponse(String id,String responseString ,boolean error, boolean timeout){
       
-        RequestResponse.Response.Builder response =  RequestResponse.Response.newBuilder();
+        Response.Builder response =  Response.newBuilder();
        
         response.setId(id);
         response.setResponse(responseString);
         response.setError(error);
-        
+        response.setTimeout(timeout);
         return response.build();
     
     }
