@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  *
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class TcpClient {
      
-    private final static Logger logger = Logger.getLogger(TcpClient.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(TcpClient.class.getName());
     
     private static int PORT = 6789;
     private static String HOST_NAME = "localhost";
@@ -41,7 +42,7 @@ public class TcpClient {
                     request = handler.getRequest(response);
                     request.writeDelimitedTo(output);
                  
-                    System.out.println("Request Type:"+ request.getType() +"\nRequest Send:\n" + request.getMessage());
+                    logger.debug("Request Type:"+ request.getType() +"\nRequest Send:\n" + request.getMessage());
                  }
                  
                  response = Response.parseDelimitedFrom(input);
@@ -53,20 +54,20 @@ public class TcpClient {
                          request.writeDelimitedTo(output);
                   }else if(response.getTimeout()){
                       isClosed = true;
-                      System.out.println("Request is timeout");
+                      logger.debug("Request is timeout");
                   }else if(response.getError()){
                       isClosed = true;
-                      System.out.println(response.getResponse());
+                      logger.debug(response.getResponse());
                   }else{
                      
-                     System.out.println("-----Response recieved: "+response.getResponse() + "------\n");
+                     logger.debug("-----Response recieved: "+response.getResponse() + "------\n");
                      request = handler.getRequest(response);
                      if(request.getType().equals(RequestType.CLOSE)){
                         isClosed = true;  /* uncomment this line if each socket is closed after sending menu once. Otherwise socket will restart sending menu after the last menu.
                         //  TcpClientHandler.setStart(true);   /* Comment this line when uncomment above line.*/
                       }
                      request.writeDelimitedTo(output);
-                     System.out.println("-----Request Send: " + request.getMessage() + "------\n");
+                     logger.debug("-----Request Send: " + request.getMessage() + "------\n");
                     
                      
                  }
@@ -77,11 +78,11 @@ public class TcpClient {
                 closeConnection(clientSocket);
 
            } catch (IOException ex) {
-               logger.log(Level.SEVERE, null, ex);
+                logger.error( null, ex);
               
            
            }catch (Exception e) {
-                logger.log(Level.SEVERE, "Exception occured ", e);
+                logger.error("Exception occured ", e);
                 System.exit(1);
          }
     }
@@ -94,18 +95,18 @@ public class TcpClient {
             clientSocket = new Socket(HOST_NAME, PORT);
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Exception occured while connecting to server", e);
+            logger.error("Exception occured while connecting to server", e);
         }
         return clientSocket;
     }
     
     public void closeConnection(Socket clientSocket){
         try {
-            logger.log(Level.INFO, "Closing the connection");
+            logger.info("Closing the connection");
             clientSocket.close();
            
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Exception occured while closing the connection", e);
+            logger.error("Exception occured while closing the connection", e);
         }
     }
     
@@ -121,7 +122,7 @@ public class TcpClient {
            phoneNumber = "56979409249";
       }
 		
-      System.out.println("Will send message to number:" + phoneNumber);  
+      logger.debug("Will send message to number:" + phoneNumber);  
       
       TcpClient  client = new TcpClient();
         
