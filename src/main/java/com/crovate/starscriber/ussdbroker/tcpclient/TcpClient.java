@@ -35,44 +35,60 @@ public class TcpClient {
                Response response = null;
                
                TcpClientHandler handler = new TcpClientHandler(phoneNumber);
+              
+               // count the number of packets send
+               int packetSent = 0;
+             
+               // this loop is for sending menus multiples times.
+               //while(packetSent < 20){
                    
-               while(!isClosed){
-                 
-                 if(TcpClientHandler.isStart()){
-                    request = handler.getRequest(response);
-                    request.writeDelimitedTo(output);
-                 
-                    logger.debug("Request Type:"+ request.getType() +"\nRequest Send:\n" + request.getMessage());
-                 }
-                 
-                 response = Response.parseDelimitedFrom(input);
-                          
-                 if(heartBeat.isHeartbeatResponse(response.getResponse())){
-                              //System.out.println("Heartbeat request: "+response.getResponse());
-                         request = heartBeat.getHeartbeatRequest();
+                    while(!isClosed){
 
+                      if(TcpClientHandler.isStart()){
+                         request = handler.getRequest(response);
                          request.writeDelimitedTo(output);
-                  }else if(response.getTimeout()){
-                      isClosed = true;
-                      logger.debug("Request is timeout");
-                  }else if(response.getError()){
-                      isClosed = true;
-                      logger.debug(response.getResponse());
-                  }else{
-                     
-                     logger.debug("-----Response recieved: "+response.getResponse() + "------\n");
-                     request = handler.getRequest(response);
-                     if(request.getType().equals(RequestType.CLOSE)){
-                        isClosed = true;  /* uncomment this line if each socket is closed after sending menu once. Otherwise socket will restart sending menu after the last menu.
-                        //  TcpClientHandler.setStart(true);   /* Comment this line when uncomment above line.*/
+                         packetSent++;
+                         logger.debug("Request Type:"+ request.getType() +"\nRequest Send:\n" + request.getMessage());
                       }
-                     request.writeDelimitedTo(output);
-                     logger.debug("-----Request Send: " + request.getMessage() + "------\n");
-                    
-                     
-                 }
 
-               }
+                      response = Response.parseDelimitedFrom(input);
+
+                      if(heartBeat.isHeartbeatResponse(response.getResponse())){
+                                   //System.out.println("Heartbeat request: "+response.getResponse());
+                              request = heartBeat.getHeartbeatRequest();
+
+                              request.writeDelimitedTo(output);
+                       }else if(response.getTimeout()){
+                           isClosed = true;
+                           logger.debug("Request is timeout");
+                       }else if(response.getError()){
+                           isClosed = true;
+                           logger.debug(response.getResponse());
+                       }else{
+
+                          logger.debug("-----Response recieved: "+response.getResponse() + "------\n");
+                          request = handler.getRequest(response);
+                          if(request.getType().equals(RequestType.CLOSE)){
+                             isClosed = true;  
+                           }
+                          request.writeDelimitedTo(output);
+                          packetSent++;
+                          logger.debug("-----Request Send: " + request.getMessage() + "------\n");
+
+
+                      }
+
+                    }
+                    
+                 System.out.println("******** Number of packets sent to ussd-broker ***********" + packetSent);           
+        
+                 // below are menu sending multiple times changes      
+//                    isClosed = false; 
+//                    TcpClientHandler.setStart(true);
+//               }
+               
+                 // above are menu sending multiple times changes            
+
                 input.close();
                 output.close();
                 closeConnection(clientSocket);
